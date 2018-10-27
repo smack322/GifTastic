@@ -1,11 +1,12 @@
+// array to store the categoies for the buttons
 var videoGames = ["Mario Party", "Call of Duty", "Pac man", "Frogger", "Donkey Kong", "NBA 2K", "Halo 3", "Resident Evil", "Gears of War", "Zelda"];
 
-      // displayMovieInfo function re-renders the HTML to display the appropriate content
-      function displayMovieInfo() {
+      // function to call the API, bring back data under the parameters of 10 giphs, and setting the images to freeze & play
+      function displayGameInfo() {
 
         var newVideoGame = $(this).attr("game-input");
         var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=tmOo7eIP6fwRQamT2cAG7bLv5lC4qaxj&q=" + newVideoGame + "&limit=10&offset=0&rating=R&lang=en";
-        // Creating an AJAX call for the specific movie button being clicked
+        // Creating an AJAX call for the button being clicked
         $.ajax({
           url: queryURL,
           method: "GET"
@@ -20,12 +21,12 @@ var videoGames = ["Mario Party", "Call of Duty", "Pac man", "Frogger", "Donkey K
             // Creating and storing a div tag
             var gameDiv = $("<div>");
 
-            // Creating a paragraph tag with the result item's rating
+            // Creating a paragraph tag to store the giph rating & text to print the Rating to the page
             var p = $("<p>").text("Rating: " + results[i].rating);
 
             // Creating and storing an image tag
             var gameImage = $("<img>");
-            // Setting the src attribute of the image to a property pulled off the result item
+            // Setting the image for still and animate so that they appear as still and then on one click move & 2 clicks freeze again
             gameImage.attr("src", results[i].images.fixed_height_still.url);
             gameImage.attr("data-state", "still");
             gameImage.attr("data-animate", results[i].images.fixed_height.url);
@@ -35,8 +36,8 @@ var videoGames = ["Mario Party", "Call of Duty", "Pac man", "Frogger", "Donkey K
             gameDiv.append(p);
             gameDiv.append(gameImage);
 
-            // Prependng the animalDiv to the HTML page in the "#gifs-appear-here" div
-            $("#movies-view").prepend(gameDiv);
+            // add the div to the page before the "#gifs-appear-here" div
+            $("#games-view").prepend(gameDiv);
           }
         });
 
@@ -45,28 +46,22 @@ var videoGames = ["Mario Party", "Call of Duty", "Pac man", "Frogger", "Donkey K
       // Function for displaying movie data
       function renderButtons() {
 
-        // Deleting the movies prior to adding new movies
-        // (this is necessary otherwise you will have repeat buttons)
+        // Clear out the movies prior to adding new movies 
         $("#buttons-view").empty();
 
         // Looping through the array of movies
         for (var i = 0; i < videoGames.length; i++) {
 
-          // Then dynamicaly generating buttons for each movie in the array
-          // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
+          // make each item in the array a button
           var a = $("<button>");
-          // Adding a class of movie-btn to our button
-          a.addClass("movie-btn");
-          // Adding a data-attribute
+          a.addClass("game-btn");
           a.attr("game-input", videoGames[i]);
-          // Providing the initial button text
           a.text(videoGames[i]);
-          // Adding the button to the buttons-view div
           $("#buttons-view").append(a);
         }
       }
 
-      // This function handles events where a movie button is clicked
+      // on click event to handle adding new topics to array
       $("#add-game").on("click", function(event) {
         event.preventDefault();
         // This line grabs the input from the textbox
@@ -80,7 +75,7 @@ var videoGames = ["Mario Party", "Call of Duty", "Pac man", "Frogger", "Donkey K
         renderButtons();
       });
 
-      // Adding a click event listener to all elements with a class of "movie-btn"
+      // Adding on click listened to determine frozen vs moving giphs
       $(document).on("click", "img", function() {
           var state = $(this).attr("data-state");
           if(state === "still") {
@@ -93,7 +88,7 @@ var videoGames = ["Mario Party", "Call of Duty", "Pac man", "Frogger", "Donkey K
           }   
       });
 
-      $(document).on("click", ".movie-btn", displayMovieInfo);
+      $(document).on("click", ".game-btn", displayGameInfo);
 
       // Calling the renderButtons function to display the intial buttons
       renderButtons();
